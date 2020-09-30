@@ -1,0 +1,69 @@
+﻿@model List<Incident>
+
+@{
+    ViewBag.Title = "Incident Manager";
+}
+
+<h1>Incident Manager</h1>
+
+<!--add part 5 links at the top-->
+<div class="container">
+    @foreach (var incident in @Model)
+    {
+        <ul class="nav nav-pills">
+            <li class="nav-item">
+                <a class="nav-link active" asp-controller="Incidents" asp-action="Index">All Incidents</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" asp-controller="Incidents" asp-action="FilterUnassigned" asp-route-id="@incident.IncidentID">Unassigned Incidents</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" asp-controller="Incidents" asp-action="FilterOpen" asp-route-id="@incident.IncidentID">Open Incidents</a>
+            </li>
+        </ul>
+    }
+    </div>
+
+<table class="table table-boardered table-striped">
+    <thead>
+        <tr>
+            <th>IncidentID</th>
+            <th>CustomerID</th>
+            <th>ProductID</th>
+            <th>TechnicianID</th>
+            <th>Title</th>
+            <th>Description</th>
+            <th>DateOpened</th>
+            <th>DateClosed</th>
+            <th></th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var incident in @Model)
+        {
+            <tr>
+                <td>@incident.IncidentID</td>
+                <td>@incident.CustomerID</td>
+                <td>@incident.ProductID</td>
+                <td>@incident.TechnicianID</td>
+                <td>@incident.Title</td>
+                <td>@incident.Description</td>
+                <td>@incident.DateOpened</td>
+                <td>@incident.DateClosed</td>
+                <td>
+                    <a asp-controller="Incidents" asp-action="Edit"
+                       asp-route-id="@incident.IncidentID">Edit</a>
+                </td>
+                <td>
+                    <a asp-controller="Incidents" asp-action="Delete"
+                       asp-route-id="@incident.IncidentID">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+<br />
+<br />
+<br />
+<a asp-controller="Incidents" asp-action="Add" class="btn btn-primary">Add Incident</a>

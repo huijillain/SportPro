@@ -1,0 +1,40 @@
+﻿@using SportsPro.ViewModels
+@using Microsoft.AspNetCore.Http
+@model TechIncidentViewModel
+@{
+    ViewData["Title"] = "List Incidents for Technician";
+    int? sessionID = Context.Session.GetInt32("sessionID"); // part 5 session state
+}
+<div class="text-center">
+    <h1><b>Technician: @Model.Technician.Name <br /> Assigned & Opened Incidents</b></h1>
+</div>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Title</th>
+            <th>Customer</th>
+            <th>Product</th>
+            <th>Date Opened</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var i in @Model.Incidents)
+        {
+            <tr>
+                <td>@i.Title</td>
+                <td>@i.Customer.FullName</td>
+                <td>@i.Product.Name</td>
+                <td>@i.DateOpened</td>
+                <td>
+                    <a asp-controller="TechIncident" asp-action="Edit" asp-route-id=@i.IncidentID class="btn btn-primary">Edit</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+<br />
+<br />
+<br />
+<a asp-controller="TechIncident" asp-action="Get" class="btn btn-primary">Switch Technician</a>
