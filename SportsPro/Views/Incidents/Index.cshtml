@@ -2,9 +2,23 @@
 
 @{
     ViewBag.Title = "Incident Manager";
+    var msg = TempData["Message"]?.ToString();
+    var needsToShow = msg == null || msg == "" ? false : true;
+    bool deleted = false;
+    if (needsToShow)
+    {
+        deleted = msg.Contains("Delete");
+    }
+    TempData["Message"] = "";
 }
 
-<h1>Incident Manager</h1>
+<div class="text-center">
+    @if (needsToShow)
+    {
+        <h2 class="bg-info @(deleted ? "bg-danger": "")">@msg</h2>
+    }
+    <h1 style="background-color: #f7d6bf; font-size: 50px" class="jumbotron"><b>Incident Manager</b></h1>
+</div>
 
 <!--add part 5 links at the top-->
 <div class="container">
@@ -22,7 +36,7 @@
             </li>
         </ul>
     }
-    </div>
+</div>
 
 <table class="table table-boardered table-striped">
     <thead>
