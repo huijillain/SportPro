@@ -2,8 +2,7 @@
 using System.Collections.Generic;
 
 namespace SportsPro.ViewModels
-{
-    public class IncidentViewModel
+{    public class IncidentViewModel
     {
         public List<Customer> Customers { get; set; }
         public string FilterString { get; set; }
@@ -20,12 +19,10 @@ namespace SportsPro.ViewModels
         public List<Incident> Incidents
         {
             get => incidents;
-
             set
             {
                 incidents = value;
             }
-
         }
         public int? TechnicianID { get; set; }
 
