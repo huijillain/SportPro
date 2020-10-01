@@ -1,5 +1,6 @@
-﻿@model List<Incident>
-
+﻿@using SportsPro.ViewModels
+@using Microsoft.AspNetCore.Http
+@model IncidentViewModel 
 @{
     ViewBag.Title = "Incident Manager";
     var msg = TempData["Message"]?.ToString();
@@ -21,53 +22,46 @@
 </div>
 
 <div class="container">
-        <ul class="nav nav-pills">
-            <li class="nav-item">
-                <a class="nav-link active" asp-controller="Incidents" asp-action="Index">All Incidents</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" name="filter" asp-controller="Incidents" asp-action="Filter" method="post">Unassigned Incidents</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" name="filter" asp-controller="Incidents" asp-action="Filter" method="post">Open Incidents</a>
-            </li>
-        </ul>
+    <ul class="nav nav-pills">
+        <li class="nav-item">
+            <a class="nav-link active" asp-controller="Incidents" asp-action="FilterAll">All Incidents</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" asp-controller="Incidents" asp-action="FilterUnassigned">Unassigned Incidents</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" asp-controller="Incidents" asp-action="FilterOpen">Open Incidents</a>
+        </li>
+
+    </ul>
 </div>
 
-<table class="table table-boardered table-striped">
+<table class="table table-striped">
     <thead>
         <tr>
-            <th>IncidentID</th>
-            <th>CustomerID</th>
-            <th>ProductID</th>
-            <th>TechnicianID</th>
-            <th>Title</th>
-            <th>Description</th>
-            <th>DateOpened</th>
-            <th>DateClosed</th>
-            <th></th>
-            <th></th>
+            <th scope="col">Title</th>
+            <th scope="col">Customer</th>
+            <th scope="col">Product</th>
+            <th scope="col">Date Opened</th>
+            <th scope="col"></th>
+            <th scope="col"></th>
         </tr>
     </thead>
     <tbody>
-        @foreach (var incident in @Model)
+        @foreach (var i in @Model.Incidents)
         {
             <tr>
-                <td>@incident.IncidentID</td>
-                <td>@incident.CustomerID</td>
-                <td>@incident.ProductID</td>
-                <td>@incident.TechnicianID</td>
-                <td>@incident.Title</td>
-                <td>@incident.Description</td>
-                <td>@incident.DateOpened</td>
-                <td>@incident.DateClosed</td>
+                <td>@i.Title</td>
+                <td>@i.Customer.FullName</td>
+                <td>@i.Product.Name</td>
+                <td>@i.DateOpened</td>
                 <td>
                     <a asp-controller="Incidents" asp-action="Edit"
-                       asp-route-id="@incident.IncidentID">Edit</a>
+                       asp-route-id=@i.IncidentID class="btn btn-primary">Edit</a>
                 </td>
                 <td>
                     <a asp-controller="Incidents" asp-action="Delete"
-                       asp-route-id="@incident.IncidentID">Delete</a>
+                       asp-route-id=@i.IncidentID class="btn btn-danger">Delete</a>
                 </td>
             </tr>
         }
