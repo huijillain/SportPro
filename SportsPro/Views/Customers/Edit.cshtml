@@ -13,10 +13,10 @@
 <form asp-action="Edit" method="post">
     <div asp-validation-summary="All" class="text-danger"></div>
 
-    <div class="form-group">
-        <label asp-for="CustomerID">Customer ID</label>
-        <input asp-for="CustomerID" class="form-control">
-    </div>
+    @*<div class="form-group">
+            <label asp-for="CustomerID">Customer ID</label>
+            <input asp-for="CustomerID" class="form-control">
+        </div>*@
 
     <div class="form-group">
         <label asp-for="FirstName">First Name</label>
@@ -49,11 +49,13 @@
     </div>
 
     <div class="form-group">
-        <label asp-for="CountryID">Country ID</label>
-        <select asp-for="CountryID"
-                asp-items="@(new SelectList(ViewBag.Customers, "CountryID", "CountryID", Model.CustomerID.ToString()))"
-                class="form-control">
-            <option value="">select a country</option>
+        <label asp-for="CountryID">Country</label>
+        <select asp-for="CountryID" class="form-control">
+            <option value="">Select a Country</option>
+            @foreach (Country g in ViewBag.Countries)
+            {
+                <option value="@g.CountryID">@g.Name</option>
+            }
         </select>
     </div>
 
@@ -69,15 +71,15 @@
 
     <input type="hidden" asp-for="CustomerID" />
 
-    <button type="submit" class="btn btn-primary">@ViewBag.Action</button>
+    <button type="submit" class="btn btn-primary">Save</button>
     @if (ViewBag.Action == "Add")
     {
-        <a asp-controller="Customers" asp-action="Index"
+        <a asp-controller="Home" asp-action="Index"
            class="btn btn-primary">Cancel</a>
     }
     else
     {
-        <a asp-action="Edit"
+        <a asp-action="Index"
            class="btn btn-primary">Cancel Edit</a>
     }
 </form>

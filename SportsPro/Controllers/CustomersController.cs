@@ -11,30 +11,33 @@ namespace SportsPro.Controllers
     {
         private SportsProContext context { get; set; }
 
-        public CustomersController(SportsProContext context)
+        public CustomersController(SportsProContext ctx)
         {
-            this.context = context;
+            context = ctx;
         }
-        [Route("Customers")] //Add Route
-        public IActionResult Index()
+
+        [Route("Customers")]
+        [HttpGet]
+        public ViewResult Index()
         {
-            var customers = context.Customers.ToList();
-            return View(customers);
+            ViewBag.Action = "Edit";
+            var Customers = context.Customers.OrderBy(g => g.FirstName).ToList();
+            return View(Customers);
         }
 
         [HttpGet]
-        public IActionResult Add()
+        public ViewResult Add()
         {
             ViewBag.Action = "Add";
-            ViewBag.Customers = context.Customers.ToList();
+            ViewBag.Countries = context.Countries.OrderBy(g => g.Name).ToList();
             return View("Edit", new Customer());
         }
 
         [HttpGet]
-        public IActionResult Edit(int id)
+        public ViewResult Edit(int id)
         {
             ViewBag.Action = "Edit";
-            ViewBag.Customers = context.Customers.ToList();
+            ViewBag.Countries = context.Countries.OrderBy(g => g.Name).ToList();
             var customer = context.Customers.Find(id);
             return View(customer);
         }
@@ -49,30 +52,31 @@ namespace SportsPro.Controllers
                 else
                     context.Customers.Update(customer);
                 context.SaveChanges();
+                TempData["message"] = $"{customer.FullName} added to database";
                 return RedirectToAction("Index", "Customer");
             }
             else
             {
                 ViewBag.Action = (customer.CustomerID == 0) ? "Add" : "Edit";
-                ViewBag.Customers = context.Customers.ToList();
+                ViewBag.Countries = context.Countries.OrderBy(g => g.Name).ToList();
                 return View(customer);
             }
         }
 
         [HttpGet]
-        public IActionResult Delete(int id)
+        public ViewResult Delete(int id)
         {
             var customer = context.Customers.Find(id);
             return View(customer);
         }
 
         [HttpPost]
-        public IActionResult Delete(Customer customer)
+        public RedirectToActionResult Delete(Customer customer)
         {
             context.Customers.Remove(customer);
             context.SaveChanges();
+            TempData["message"] = $"{customer.FullName} deleted from database";
             return RedirectToAction("Index", "Customer");
         }
-
     }
 }
