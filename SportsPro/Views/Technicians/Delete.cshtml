@@ -4,10 +4,11 @@
 }
 
 <h2>Confirm Deletion</h2>
-<h3>@Model.Name (@Model.TechnicianID)</h3>
+<h3>@Model.Name (@Model.Email)</h3>
 
 <form asp-action="Delete" method="post">
     <input type="hidden" asp-for="TechnicianID" />
+    <input type="hidden" asp-for="Name" />
 
     <button type="submit" class="btn btn-primary">Delete</button>
     <a asp-controller="Technicians" asp-action="Index"

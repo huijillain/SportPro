@@ -12,15 +12,18 @@
 
 <form asp-action="Edit" method="post">
     <div asp-validation-summary="All" class="text-danger"></div>
-
+    @if (ViewBag.Action == "Edit")
+    {
+        <input asp-for="TechnicianID" type="hidden" value="@Model.TechnicianID" />
+    }
     <div class="form-group">
         <label asp-for="TechnicianID">Technician ID</label>
         <input asp-for="TechnicianID" class="form-control">
         @*<select asp-for="TechnicianID"
-                asp-items="@(new SelectList(ViewBag.Technicians, "TechnicianID", "TechnicianID", Model.TechnicianID.ToString()))"
-                class="form-control">
-            <option value="">select a Technician</option>
-        </select>*@
+                    asp-items="@(new SelectList(ViewBag.Technicians, "TechnicianID", "TechnicianID", Model.TechnicianID.ToString()))"
+                    class="form-control">
+                <option value="">select a Technician</option>
+            </select>*@
     </div>
 
     <div class="form-group">
@@ -40,15 +43,15 @@
 
     <input type="hidden" asp-for="TechnicianID" />
 
-    <button type="submit" class="btn btn-primary">@ViewBag.Action</button>
+    <button type="submit" class="btn btn-primary">Save</button>
     @if (ViewBag.Action == "Add")
     {
         <a asp-controller="Technicians" asp-action="Index"
-           class="btn btn-primary">Cancel</a>
+           class="form-control">Cancel</a>
     }
     else
     {
         <a asp-action="Edit"
-           class="btn btn-primary">Cancel Edit</a>
+           class="form-control">Cancel Edit</a>
     }
 </form>
