@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using SportsPro.Models;
+using SportsPro.ViewModels;
 
 namespace SportsPro.Controllers
 {
@@ -75,5 +76,48 @@ namespace SportsPro.Controllers
             return RedirectToAction("Index", "Home");
         }
 
+        [HttpGet]
+        public ViewResult List(string activeIncident = "All", string activeTechnician = "All")
+        {
+            string FilterString = HttpContext.Session.GetString("FilterString");
+            var model = new TechIncidentViewModel
+            {
+                ActiveIncident = activeIncident,
+                ActiveTechnician = activeTechnician,
+                Incidents = context.Incidents.OrderBy(i => i.Title).ToList(),
+                Technicians = context.Technicians.OrderBy(c => c.Name).ToList(),
+                Customers = context.Customers.OrderBy(c => c.FirstName).ToList(),
+                Products = context.Products.OrderBy(p => p.Name).ToList(),
+
+            };
+            IQueryable<Incident> query = context.Incidents;
+            if (FilterString != "null")
+            {
+                if (FilterString != "unassigned")
+                    query = query.Where(i => i.TechnicianID == null);
+                if (FilterString != "open")
+                    query = query.Where(i => i.DateClosed == null);
+            }
+            model.Incidents = query.ToList();
+            return View(model);
+        }
+
+        public IActionResult FilterAll()
+        {
+            HttpContext.Session.SetString("FilterString", "null");
+            return RedirectToAction("List");
+        }
+
+        public IActionResult FilterUnassigned()
+        {
+            HttpContext.Session.SetString("FilterString", "unassigned");
+            return RedirectToAction("List");
+        }
+
+        public IActionResult FilterOpen()
+        {
+            HttpContext.Session.SetString("FilterString", "open");
+            return RedirectToAction("List");
+        }
     }
 }

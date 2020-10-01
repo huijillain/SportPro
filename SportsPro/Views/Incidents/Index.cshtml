@@ -20,22 +20,18 @@
     <h1 style="background-color: #f7d6bf; font-size: 50px" class="jumbotron"><b>Incident Manager</b></h1>
 </div>
 
-<!--add part 5 links at the top-->
 <div class="container">
-    @foreach (var incident in @Model)
-    {
         <ul class="nav nav-pills">
             <li class="nav-item">
                 <a class="nav-link active" asp-controller="Incidents" asp-action="Index">All Incidents</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" asp-controller="Incidents" asp-action="FilterUnassigned" asp-route-id="@incident.IncidentID">Unassigned Incidents</a>
+                <a class="nav-link" name="filter" asp-controller="Incidents" asp-action="Filter" method="post">Unassigned Incidents</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" asp-controller="Incidents" asp-action="FilterOpen" asp-route-id="@incident.IncidentID">Open Incidents</a>
+                <a class="nav-link" name="filter" asp-controller="Incidents" asp-action="Filter" method="post">Open Incidents</a>
             </li>
         </ul>
-    }
 </div>
 
 <table class="table table-boardered table-striped">
