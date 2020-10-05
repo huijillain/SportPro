@@ -45,7 +45,7 @@ namespace SportsPro.Controllers
         //}
 
         [HttpGet]
-        public ViewResult Registrations(string activeIncident = "All", string activeTechnician = "All")
+        public ViewResult Index(string activeIncident = "All", string activeTechnician = "All")
         {
 
             var model = new RegisterViewModel
@@ -65,7 +65,7 @@ namespace SportsPro.Controllers
         }
 
         [HttpPost]
-        public ViewResult Registrations(RegisterViewModel inc)
+        public ViewResult Index(RegisterViewModel inc)
 
         {
             var custId = inc.CurrentCustomer.CustomerID;

@@ -20,17 +20,34 @@ namespace SportsPro.Controllers
             }
 
             [HttpGet]
-            public IActionResult Get()
-            {
-                var technicians = context.Technicians.ToList();
-                return View(technicians);
-            }
+        public ViewResult Get(string activeIncident = "All", string activeTechnician = "All")
+        {
 
-            [HttpGet]
+            var model = new IncidentViewModel
+            {
+                //ActiveIncident = activeIncident,
+                ActiveTechnician = activeTechnician,
+                //Incidents = context.Incidents.OrderBy(i => i.Title).ToList(),
+                Technicians = context.Technicians.OrderBy(c => c.Name).ToList(),
+                //Customers = context.Customers.OrderBy(c => c.FirstName).ToList(),
+                // Products = context.Products.OrderBy(p => p.Name).ToList(),
+
+            };
+            IQueryable<Incident> query = context.Incidents;
+            if (activeIncident != "All")
+                query = query.Where(i => i.IncidentID.ToString() == activeIncident);
+            if (activeTechnician != "All")
+                query = query.Where(i => i.Technician.TechnicianID.ToString() == activeTechnician);
+            model.Incidents = query.ToList();
+            return View(model);
+        }
+
+        [HttpGet]
             public IActionResult List(int id)
             {      // an action method gets & sets a session state value
-            int? sessionID = HttpContext.Session.GetInt32("sessionID");
-            var technician = context.Technicians.Find(id);
+                int? sessionID = HttpContext.Session.GetInt32("sessionID");
+             
+                var technician = context.Technicians.Find(id);
                 var viewModel = new TechIncidentViewModel
                 {
                     Technician = technician,

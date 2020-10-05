@@ -6,8 +6,15 @@
     int? sessionID = Context.Session.GetInt32("sessionID"); // part 5 session state
 }
 <div class="text-center">
-    <h1><b>Technician: @Model.Technician.Name <br /> Assigned & Opened Incidents</b></h1>
+    <h1><b>Technician: @Model.Technician.Name <br /> Assigned & Open Incidents</b></h1>
 </div>
+
+@if (TempData.Keys.Contains("message"))
+{
+    <h4 class="bg-info text-center text-white p-2">
+        @TempData["message"]
+    </h4>
+}
 
 <table class="table table-striped">
     <thead>
@@ -16,6 +23,7 @@
             <th>Customer</th>
             <th>Product</th>
             <th>Date Opened</th>
+            <th></th>
             <th></th>
         </tr>
     </thead>

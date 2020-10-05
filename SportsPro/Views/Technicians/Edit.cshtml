@@ -11,34 +11,34 @@
 <h2>@ViewBag.Title</h2>
 
 <form asp-action="Edit" method="post">
-    <div asp-validation-summary="All" class="text-danger"></div>
+    @*<div asp-validation-summary="All" class="text-danger"></div>*@
     @if (ViewBag.Action == "Edit")
     {
         <input asp-for="TechnicianID" type="hidden" value="@Model.TechnicianID" />
     }
-    <div class="form-group">
+    @*<div class="form-group">
         <label asp-for="TechnicianID">Technician ID</label>
         <input asp-for="TechnicianID" class="form-control">
-        @*<select asp-for="TechnicianID"
+        <select asp-for="TechnicianID"
                     asp-items="@(new SelectList(ViewBag.Technicians, "TechnicianID", "TechnicianID", Model.TechnicianID.ToString()))"
                     class="form-control">
                 <option value="">select a Technician</option>
-            </select>*@
-    </div>
+            </select>
+    </div>*@
 
     <div class="form-group">
         <label asp-for="Name">Name</label>
-        <input asp-for="Name" class="form-control">
+        <input asp-for="Name" class="form-control" value=@Model.Name>>
     </div>
 
     <div class="form-group">
         <label asp-for="Email">Email</label>
-        <input asp-for="Email" class="form-control">
+        <input asp-for="Email" class="form-control" value=@Model.Email>
     </div>
 
     <div class="form-group">
         <label asp-for="Phone">Phone</label>
-        <input asp-for="Phone" class="form-control">
+        <input asp-for="Phone" class="form-control" value=@Model.Phone>
     </div>
 
     <input type="hidden" asp-for="TechnicianID" />
