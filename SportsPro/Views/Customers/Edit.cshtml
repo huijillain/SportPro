@@ -4,7 +4,8 @@
     ViewBag.Title = title;
 }
 
-@*Add Validation to Add Edit Pages*@ 
+@*Add Validation to Add Edit Pages*@
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
 <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
 <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
 
@@ -67,10 +68,6 @@
         <span asp-validation-for="Phone" class="text-danger"></span>
 
     </div>
-
-    @*<div>
-            @RenderBody()
-        </div>*@
 
     <button type="submit" class="btn btn-primary">Save</button>
     <a asp-controller="Customers" asp-action="Index" class="btn btn-info">Cancel</a>

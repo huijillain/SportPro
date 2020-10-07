@@ -247,7 +247,7 @@ namespace SportsPro.Models
                     PostalCode = "92691",
                     CountryID = "US",
                     Phone = "(214) 555-3647",
-                    Email = ""
+                    Email = "addemail@notnull.com"
                 }
             );
 

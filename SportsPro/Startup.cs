@@ -6,6 +6,7 @@ using Microsoft.Extensions.Hosting;
 
 using Microsoft.EntityFrameworkCore;
 using SportsPro.Models;
+using Microsoft.AspNetCore.Identity;
 
 namespace SportsPro
 {
@@ -21,6 +22,10 @@ namespace SportsPro
         // Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            //adding Identity services
+            //services.AddIdentity<IdentityUser, IdentityRole>()
+            //    .AddEntityFrameworkStores<SportsProContext>();
+
             //part5, Session state for Tech ID
             services.AddMemoryCache();
             services.AddSession();
@@ -54,6 +59,11 @@ namespace SportsPro
             app.UseStaticFiles();
             app.UseRouting();
             app.UseAuthorization();
+            app.UseAuthentication();
+            //app.UseMvc(routes =>
+            //{
+            //    routes.MapRoute("default", "{controller=Home}/{action=Index}/{id?}");
+            //});
 
             app.UseSession();  // must be called before UseEndpoints()
             app.UseEndpoints(endpoints =>

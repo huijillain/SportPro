@@ -9,7 +9,7 @@ using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
+//using Microsoft.AspNetCore.Identity;
 
 namespace SportsPro.Controllers
 {
@@ -22,17 +22,20 @@ namespace SportsPro.Controllers
             this.context = context;
         }
 
-        //private readonly UserManager<IdentityUser> customerManager;
-        //public CustomersController(UserManager<IdentityUser> customerManager)
+        //private readonly UserManager<IdentityUser> userManager;
+        //private readonly SignInManager<IdentityUser> signInManager;
+        //public CustomersController(UserManager<IdentityUser> userManager,
+        //                           SignInManager<IdentityUser> signInManager)
         //{
-        //    this.customerManager = customerManager;
+        //    this.userManager = userManager;
+        //    this.signInManager = signInManager;
         //}
 
         //[AcceptVerbs("Get", "Post")]
         //[AllowAnonymous]
         //public async Task<IActionResult> IsEmailInUse(string email)
         //{
-        //    var customer = await Customer.FindByEmailAsync(email);
+        //    var customer = await userManager.FindByEmailAsync(email);
         //    if (customer == null)
         //    {
         //        return Json(true);
@@ -54,32 +57,6 @@ namespace SportsPro.Controllers
         //        return Json(true);
         //}
 
-        //public JsonResult CheckEmail(string emailAddress)
-        //{
-        //    if (string.IsNullOrEmpty(msg))
-        //    {
-        //        TempData["okEmail"] = true;
-        //        return Json(true);
-        //    }
-        //    else return Json(msg);
-        //}
-
-        public static class Check
-        {
-            public static string EmailExits(SportsProContext ctx, string email)
-            {
-                string msg = "";
-                if (!string.IsNullOrEmpty(email))
-                {
-                    var customer = ctx.Customers.FirstOrDefault(
-                        c => c.Email.ToLower() == email.ToLower());
-                    if (customer != null)
-                        msg = $"Email address {email} aleready in use.";
-                }
-                return msg;
-            }
-        }
-
 
         [TempData]
         public string Message { get; set; }
@@ -99,6 +76,27 @@ namespace SportsPro.Controllers
             ViewBag.Countries = context.Countries.OrderBy(g => g.Name).ToList();
             return View("Edit", new Customer());
         }
+
+        //[HttpPost]
+        //public async Task<IActionResult> Add(Customer model)
+        //{
+        //    if (ModelState.IsValid)
+        //    {
+        //        var customer = new IdentityUser { UserName = model.Email, Email = model.Email };
+        //        var result = await userManager.CreateAsync(customer, model.Email);
+
+        //        if(result.Succeeded)
+        //        {
+        //            await signInManager.SignInAsync(customer, isPersistent: false);
+        //            return RedirectToAction("index", "home");
+        //        }
+        //        foreach(var error in result.Errors)
+        //        {
+        //            ModelState.AddModelError("", error.Description);
+        //        }
+        //    }
+        //    return View(model);
+        //}
 
         [HttpGet]
         public IActionResult Edit(int id)
