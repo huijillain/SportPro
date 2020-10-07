@@ -30,12 +30,11 @@ namespace SportsPro.Models
 		public string CountryID { get; set; }
 		public Country Country { get; set; }
 
-		//[RegularExpression(@"^((\+0?1\s)?)\(?\d{3}\)?[\s.\s]\d{3}[\s.-]\d{4}$")]
-		[Required(ErrorMessage = "Phone number must be in (999)-999-9999 format.")]
+        [RegularExpression(@"^((\+0?1\s)?)\(?\d{3}\)?[\s.\s]\d{3}[\s.-]\d{4}$", ErrorMessage = "Phone number must be in (999) 999-9999 format.")]
         public string Phone { get; set; }
 
         [Required(ErrorMessage = "Please enter a valid email address.")]
-		[Remote(action:"IsEmailInUse", controller:"Customers")]
+        //[Remote("CheckEmail", "Customers", AdditionalFields = "CustomerID")]
         [DataType(DataType.EmailAddress)]
 		public string Email { get; set; }
 		//public ICollection<Registeration> Index { get; set; }

@@ -9,6 +9,7 @@ using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 
 namespace SportsPro.Controllers
 {
@@ -20,6 +21,66 @@ namespace SportsPro.Controllers
         {
             this.context = context;
         }
+
+        //private readonly UserManager<IdentityUser> customerManager;
+        //public CustomersController(UserManager<IdentityUser> customerManager)
+        //{
+        //    this.customerManager = customerManager;
+        //}
+
+        //[AcceptVerbs("Get", "Post")]
+        //[AllowAnonymous]
+        //public async Task<IActionResult> IsEmailInUse(string email)
+        //{
+        //    var customer = await Customer.FindByEmailAsync(email);
+        //    if (customer == null)
+        //    {
+        //        return Json(true);
+        //    }
+        //    else
+        //    {
+        //        return Json($"Email {email} is already in use.");
+        //    }
+        //}
+
+
+        //from ASP.NET book with remote validation
+        //public JsonResult CheckEmail(string email, int CustomerID)
+        //{
+        //    bool hasEmail = Utility.CheckEmail(email);
+        //    if (hasEmail)
+        //        return Json($"Email address {email} is already registered.");
+        //    else
+        //        return Json(true);
+        //}
+
+        //public JsonResult CheckEmail(string emailAddress)
+        //{
+        //    if (string.IsNullOrEmpty(msg))
+        //    {
+        //        TempData["okEmail"] = true;
+        //        return Json(true);
+        //    }
+        //    else return Json(msg);
+        //}
+
+        public static class Check
+        {
+            public static string EmailExits(SportsProContext ctx, string email)
+            {
+                string msg = "";
+                if (!string.IsNullOrEmpty(email))
+                {
+                    var customer = ctx.Customers.FirstOrDefault(
+                        c => c.Email.ToLower() == email.ToLower());
+                    if (customer != null)
+                        msg = $"Email address {email} aleready in use.";
+                }
+                return msg;
+            }
+        }
+
+
         [TempData]
         public string Message { get; set; }
 
@@ -29,21 +90,6 @@ namespace SportsPro.Controllers
             ViewBag.Action = "Edit";
             var Customers = context.Customers.OrderBy(g => g.FirstName).ToList();
             return View(Customers);
-        }
-
-        [AcceptVerbs("Get","Post")]
-        [AllowAnonymous]
-        public async Task<IActionResult> IsEmailInUse(string email)
-        {
-            var customer = await customerManager.FindByEmailAsync(email);
-            if(customer == null)
-            {
-                return Json(true);
-            }
-            else
-            {
-                return Json($"Email {email} is already in use.");
-            }
         }
 
         [HttpGet]
