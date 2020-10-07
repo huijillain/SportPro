@@ -1,64 +1,45 @@
 ﻿@model List<Customer>
-
 @{
-    ViewBag.Title = "Customer Manager";
-    var msg = TempData["Message"]?.ToString();
-    var needsToShow = msg == null || msg == "" ? false : true;
-    bool deleted = false;
-    if (needsToShow)
-    {
-        deleted = msg.Contains("Delete");
-    }
-    TempData["Message"] = "";
+    ViewBag.Title = " Customer Manager ";
+}
+
+@*<h2>@ViewBag.Title</h2>*@
+@if (TempData.Keys.Contains("message"))
+{
+    <h4 class="bg-info text-center text-white p-2">
+        @TempData["message"]
+    </h4>
 }
 
 <div class="text-center">
-
-    @if (needsToShow)
-    {
-        <h2 class="bg-info @(deleted ? "bg-danger": "")">@msg</h2>
-    }
-
     <h1 style="background-color: #f7d6bf; font-size: 50px" class="jumbotron"><b>Customer Manager</b></h1>
 </div>
 <table class="table table-boardered table-striped">
     <thead>
         <tr>
-            <th>Customer ID</th>
             <th>Full Name</th>
-            <th>Address</th>
-            <th>City</th>
-            <th>State</th>
-            <th>Postal Code</th>
-            <th>Country ID</th>
-            <th>Phone</th>
             <th>Email</th>
+            <th>City</th>
             <th></th>
             <th></th>
         </tr>
     </thead>
     <tbody>
-        @foreach (var customer in @Model)
+        @foreach (var t in @Model)
         {
-            <tr>
-                <td>@customer.CustomerID</td>
-                <td>@customer.FullName</td>
-                <td>@customer.Address</td>
-                <td>@customer.City</td>
-                <td>@customer.State</td>
-                <td>@customer.PostalCode</td>
-                <td>@customer.CountryID</td>
-                <td>@customer.Phone</td>
-                <td>@customer.Email</td>
-                <td>
-                    <a asp-controller="Customers" asp-action="Edit"
-                       asp-route-id="@customer.CustomerID">Edit</a>
-                </td>
-                <td>
-                    <a asp-controller="Customers" asp-action="Delete"
-                       asp-route-id="@customer.CustomerID">Delete</a>
-                </td>
-            </tr>
+        <tr>
+            <td>@t.FullName</td>
+            <td>@t.Email</td>
+            <td>@t.City</td>
+            <td>
+                <a asp-controller="Customers" asp-action="Edit"
+                   asp-route-id="@t.CustomerID">Edit</a>
+            </td>
+            <td>
+                <a asp-controller="Customers" asp-action="Delete"
+                   asp-route-id="@t.CustomerID">Delete</a>
+            </td>
+        </tr>
         }
     </tbody>
 </table>

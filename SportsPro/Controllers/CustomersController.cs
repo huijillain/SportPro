@@ -1,9 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using SportsPro.Models;
+using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
+using Microsoft.AspNetCore.DataProtection;
+using Microsoft.AspNetCore.Authorization;
 
 namespace SportsPro.Controllers
 {
@@ -11,22 +16,38 @@ namespace SportsPro.Controllers
     {
         private SportsProContext context { get; set; }
 
-        public CustomersController(SportsProContext ctx)
+        public CustomersController(SportsProContext context)
         {
-            context = ctx;
+            this.context = context;
         }
+        [TempData]
+        public string Message { get; set; }
 
-        [Route("Customers")]
-        [HttpGet]
-        public ViewResult Index()
+        [Route("Customers")]// Add Route
+        public IActionResult Index()
         {
             ViewBag.Action = "Edit";
             var Customers = context.Customers.OrderBy(g => g.FirstName).ToList();
             return View(Customers);
         }
 
+        [AcceptVerbs("Get","Post")]
+        [AllowAnonymous]
+        public async Task<IActionResult> IsEmailInUse(string email)
+        {
+            var customer = await customerManager.FindByEmailAsync(email);
+            if(customer == null)
+            {
+                return Json(true);
+            }
+            else
+            {
+                return Json($"Email {email} is already in use.");
+            }
+        }
+
         [HttpGet]
-        public ViewResult Add()
+        public IActionResult Add()
         {
             ViewBag.Action = "Add";
             ViewBag.Countries = context.Countries.OrderBy(g => g.Name).ToList();
@@ -34,12 +55,12 @@ namespace SportsPro.Controllers
         }
 
         [HttpGet]
-        public ViewResult Edit(int id)
+        public IActionResult Edit(int id)
         {
             ViewBag.Action = "Edit";
             ViewBag.Countries = context.Countries.OrderBy(g => g.Name).ToList();
-            var customer = context.Customers.Find(id);
-            return View(customer);
+            var t = context.Customers.Find(id);
+            return View(t);
         }
 
         [HttpPost]
@@ -48,12 +69,18 @@ namespace SportsPro.Controllers
             if (ModelState.IsValid)
             {
                 if (customer.CustomerID == 0)
+                {
+                    Message = $"Added Customer {customer.FullName}";
                     context.Customers.Add(customer);
+                }
                 else
+                {
+                    Message = $"Edited Customer {customer.FullName}";
                     context.Customers.Update(customer);
+                }
+
                 context.SaveChanges();
-                TempData["message"] = $"{customer.FullName} added to database";
-                return RedirectToAction("Index", "Customer");
+                return RedirectToAction("Index", "Customers");
             }
             else
             {
@@ -61,22 +88,24 @@ namespace SportsPro.Controllers
                 ViewBag.Countries = context.Countries.OrderBy(g => g.Name).ToList();
                 return View(customer);
             }
-        }
+    }
 
         [HttpGet]
-        public ViewResult Delete(int id)
+        public IActionResult Delete(int id)
         {
-            var customer = context.Customers.Find(id);
-            return View(customer);
+            ViewBag.Action = "Delete";
+            var t = context.Customers.Find(id);
+            return View(t);
         }
 
         [HttpPost]
-        public RedirectToActionResult Delete(Customer customer)
+        public IActionResult Delete(Customer customer)
         {
+            Message = $"Deleted Customer {customer.FullName}";
             context.Customers.Remove(customer);
             context.SaveChanges();
-            TempData["message"] = $"{customer.FullName} deleted from database";
-            return RedirectToAction("Index", "Customer");
+            return RedirectToAction("Index", "Customers");
         }
     }
 }
+

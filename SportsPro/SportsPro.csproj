@@ -9,6 +9,11 @@
     <Compile Remove="Migrations\20200107231832_Products.Designer.cs" />
     <Compile Remove="Migrations\20200110225202_Incidents_MoreChanges.cs" />
     <Compile Remove="Migrations\20200110225202_Incidents_MoreChanges.Designer.cs" />
+    <Compile Remove="Models\Registeration.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="Models\Registeration.cs" />
   </ItemGroup>
 
   <ItemGroup>
