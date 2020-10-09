@@ -10,8 +10,12 @@
 
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
-    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+    @*<script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>*@
+    <script src="~s/site.js" asp-append-version="true"></script>
+    @RenderSection("Scripts", required: false) 
+    <!--only where required section needed in CustomerController, add action-->
+
 </head>
 <body>
     <header>

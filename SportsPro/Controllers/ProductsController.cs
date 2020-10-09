@@ -2,41 +2,47 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SportsPro.Models;
 
 namespace SportsPro.Controllers
 {
+    [Authorize(Roles = "Admin")]
     public class ProductsController : Controller
     {
-        private SportsProContext context { get; set; }
-
-        public ProductsController(SportsProContext context)
+        private IGRepository<Product> ProductRepo { get; set; }
+        private IUnitOfWork UnitOfWork { get; }
+        public ProductsController(IUnitOfWork unitOfWork)
         {
-            this.context = context;
+            UnitOfWork = unitOfWork;
+            ProductRepo = unitOfWork.ProductRepository;
         }
+
+        [TempData]
+        public string Message { get; set; }
 
         [Route("Products")] //Add Route
         public IActionResult Index()
         {
-            var products = context.Products.ToList();
-            return View(products);
+            ViewBag.Action = "Edit";
+            var Products = ProductRepo.Get(orderBy: products => products.OrderBy(g => g.Name)).ToList();
+            return View(Products);
         }
 
         [HttpGet]
-        public IActionResult Add()
+        public ViewResult Add()
         {
             ViewBag.Action = "Add";
-            ViewBag.Products = context.Products.ToList();
             return View("Edit", new Product());
         }
 
         [HttpGet]
-        public IActionResult Edit(int id)
+        public ViewResult Edit(int id)
         {
             ViewBag.Action = "Edit";
-            ViewBag.Products = context.Products.ToList();
-            var product = context.Products.Find(id);
+            ViewBag.Products = ProductRepo.Get(orderBy: products => products.OrderBy(g => g.Name)).ToList();
+            var product = ProductRepo.Get(id);
             return View(product);
         }
 
@@ -45,42 +51,35 @@ namespace SportsPro.Controllers
         {
             if (ModelState.IsValid)
             {
-                if (product.ProductID == 0)
-                {  // TempData to display messages when openration is successful
-                    TempData["message"] = $"{product.Name} was added.";
-                    context.Products.Add(product);
+                    if (product.ProductID == 0)
+                        ProductRepo.Insert(product);
+                    else
+                        ProductRepo.Update(product);
+                    UnitOfWork.Save();
+                    TempData["message"] = $"{product.Name} added to database";
+                    return RedirectToAction("Index", "Product");
                 }
                 else
-                { // TempData to display messages when openration is successful
-                    TempData["message"] = $"{product.Name} was edited.";
-                    context.Products.Update(product);
-                }
-                context.SaveChanges();
-                return RedirectToAction("Index", "Products");
-            }
-            else
-            {
-                ViewBag.Action = (product.ProductID == 0) ? "Add" : "Edit";
-                ViewBag.Products = context.Products.ToList();
-                return View(product);
+                {
+                    ViewBag.Action = (product.ProductID == 0) ? "Add" : "Edit";
+                    ViewBag.Products = ProductRepo.Get(orderBy: products => products.OrderBy(g => g.Name)).ToList();
+                    return View(product);
             }
         }
 
         [HttpGet]
         public IActionResult Delete(int id)
         {
-            var product = context.Products.Find(id);
+            var product = ProductRepo.Products.Find(id);
             return View(product);
         }
 
         [HttpPost]
         public IActionResult Delete(Product product)
         {
+            ProductRepo.Delete(product);
             TempData["message"] = $"Deleted Product {product.Name}.";
-            context.Products.Remove(product);
-            context.SaveChanges();
             return RedirectToAction("Index", "Products");              // Redirect
         }
     }
-
 }

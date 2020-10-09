@@ -23,14 +23,16 @@ namespace SportsPro
         public void ConfigureServices(IServiceCollection services)
         {
             //adding Identity services
-            //services.AddIdentity<IdentityUser, IdentityRole>()
-            //    .AddEntityFrameworkStores<SportsProContext>();
+            services.AddIdentity<IdentityUser, IdentityRole>()
+                .AddEntityFrameworkStores<SportsProContext>();
 
             //part5, Session state for Tech ID
             services.AddMemoryCache();
             services.AddSession();
-
             services.AddControllersWithViews();
+
+            // Unit testing
+            services.AddHttpContextAccessor();
 
             services.AddDbContext<SportsProContext>(options =>
                 options.UseSqlServer(
@@ -40,6 +42,9 @@ namespace SportsPro
                 options.LowercaseUrls = true;
                 options.AppendTrailingSlash = true;
             });
+
+            //services.AddTransient(typeof(IUnitOfWork), typeof(UnitOfWork));
+            //services.AddTransient(typeof(IGRepository<>), typeof(GRepository<>));
         }
 
         // Use this method to configure the HTTP request pipeline.

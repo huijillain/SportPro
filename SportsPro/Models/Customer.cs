@@ -37,12 +37,12 @@ namespace SportsPro.Models
         public string Phone { get; set; }
 
         [Required(ErrorMessage = "Please enter a valid email address.")]
-        //[Remote("IsEmailInUse", "Customers")]
+        [Remote("IsEmailAvailable", "Customers")]
         [DataType(DataType.EmailAddress)]
 		public string Email { get; set; }
 
-		//public ICollection<Registeration> Index { get; set; }
+        //public ICollection<Registeration> Index { get; set; }
 
-		public string FullName => FirstName + " " + LastName;   // read-only property
+        public string FullName => FirstName + " " + LastName;   // read-only property
 	}
 }

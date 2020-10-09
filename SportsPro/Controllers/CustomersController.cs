@@ -1,62 +1,41 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Cryptography.X509Certificates;
+﻿using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using SportsPro.Models;
-using System.ComponentModel.DataAnnotations;
-using Microsoft.AspNetCore.Mvc.ModelBinding;
-using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Authorization;
-//using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity;
 
 namespace SportsPro.Controllers
 {
     public class CustomersController : Controller
     {
+        [Authorize(Roles = "Admin")]
         private SportsProContext context { get; set; }
 
-        public CustomersController(SportsProContext context)
+        private readonly UserManager<IdentityUser> userManager;
+        private readonly SignInManager<IdentityUser> signInManager;
+        public CustomersController(UserManager<IdentityUser> userManager,
+                                   SignInManager<IdentityUser> signInManager, SportsProContext context)
         {
+            this.userManager = userManager;
+            this.signInManager = signInManager;
             this.context = context;
         }
 
-        //private readonly UserManager<IdentityUser> userManager;
-        //private readonly SignInManager<IdentityUser> signInManager;
-        //public CustomersController(UserManager<IdentityUser> userManager,
-        //                           SignInManager<IdentityUser> signInManager)
-        //{
-        //    this.userManager = userManager;
-        //    this.signInManager = signInManager;
-        //}
-
-        //[AcceptVerbs("Get", "Post")]
-        //[AllowAnonymous]
-        //public async Task<IActionResult> IsEmailInUse(string email)
-        //{
-        //    var customer = await userManager.FindByEmailAsync(email);
-        //    if (customer == null)
-        //    {
-        //        return Json(true);
-        //    }
-        //    else
-        //    {
-        //        return Json($"Email {email} is already in use.");
-        //    }
-        //}
-
-
-        //from ASP.NET book with remote validation
-        //public JsonResult CheckEmail(string email, int CustomerID)
-        //{
-        //    bool hasEmail = Utility.CheckEmail(email);
-        //    if (hasEmail)
-        //        return Json($"Email address {email} is already registered.");
-        //    else
-        //        return Json(true);
-        //}
-
+        [AcceptVerbs("Get", "Post")]
+        [AllowAnonymous]
+        public async Task<JsonResult> IsEmailAvailable(string email)
+        {
+            var customer = await userManager.FindByEmailAsync(email);
+            if (customer == null)
+            {
+                return Json(true);
+            }
+            else
+            {
+                return Json($"Email {email} is already in use.");
+            }
+        }
 
         [TempData]
         public string Message { get; set; }
@@ -77,26 +56,26 @@ namespace SportsPro.Controllers
             return View("Edit", new Customer());
         }
 
-        //[HttpPost]
-        //public async Task<IActionResult> Add(Customer model)
-        //{
-        //    if (ModelState.IsValid)
-        //    {
-        //        var customer = new IdentityUser { UserName = model.Email, Email = model.Email };
-        //        var result = await userManager.CreateAsync(customer, model.Email);
+        [HttpPost]
+        public async Task<IActionResult> Add(Customer model)
+        {
+            if (ModelState.IsValid)
+            {
+                var customer = new IdentityUser { UserName = model.Email, Email = model.Email };
+                var result = await userManager.CreateAsync(customer, model.Email);
 
-        //        if(result.Succeeded)
-        //        {
-        //            await signInManager.SignInAsync(customer, isPersistent: false);
-        //            return RedirectToAction("index", "home");
-        //        }
-        //        foreach(var error in result.Errors)
-        //        {
-        //            ModelState.AddModelError("", error.Description);
-        //        }
-        //    }
-        //    return View(model);
-        //}
+                if (result.Succeeded)
+                {
+                    await signInManager.SignInAsync(customer, isPersistent: false);
+                    return RedirectToAction("index", "home");
+                }
+                foreach (var error in result.Errors)
+                {
+                    ModelState.AddModelError("", error.Description);
+                }
+            }
+            return View(model);
+        }
 
         [HttpGet]
         public IActionResult Edit(int id)
