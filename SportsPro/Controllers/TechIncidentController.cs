@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
@@ -20,33 +17,20 @@ namespace SportsPro.Controllers
             }
 
             [HttpGet]
-        public ViewResult Get(string activeIncident = "All", string activeTechnician = "All")
+        public ViewResult Get()
         {
-
             var model = new IncidentViewModel
             {
-                //ActiveIncident = activeIncident,
-                ActiveTechnician = activeTechnician,
-                //Incidents = context.Incidents.OrderBy(i => i.Title).ToList(),
-                Technicians = context.Technicians.OrderBy(c => c.Name).ToList(),
-                //Customers = context.Customers.OrderBy(c => c.FirstName).ToList(),
-                // Products = context.Products.OrderBy(p => p.Name).ToList(),
-
-            };
-            IQueryable<Incident> query = context.Incidents;
-            if (activeIncident != "All")
-                query = query.Where(i => i.IncidentID.ToString() == activeIncident);
-            if (activeTechnician != "All")
-                query = query.Where(i => i.Technician.TechnicianID.ToString() == activeTechnician);
-            model.Incidents = query.ToList();
-            return View(model);
+            var technicians = context.Technicians.ToList();
+            return View(technicians);
         }
 
         [HttpGet]
             public IActionResult List(int id)
             {      // an action method gets & sets a session state value
                 int? sessionID = HttpContext.Session.GetInt32("sessionID");
-             
+            if (id != 0)
+            {
                 var technician = context.Technicians.Find(id);
                 var viewModel = new TechIncidentViewModel
                 {
@@ -59,10 +43,19 @@ namespace SportsPro.Controllers
                                     i.DateClosed == null)
                         .ToList()
                 };
-                return View(viewModel);
-            }
+                if (viewModel.Incidents.Count == 0)
+                TempData["message"] = $"No open incidents for this Technician";
 
-            [HttpGet]
+                 return View(viewModel);
+            }
+            else
+            {
+                TempData["message"] = $"Please enter a  Technician";
+                return RedirectToAction("Get");
+            }
+        }
+
+        [HttpGet]
             public IActionResult Edit(int id)
             {
                 var i = context.Incidents
