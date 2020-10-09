@@ -17,9 +17,7 @@ namespace SportsPro.Controllers
             }
 
             [HttpGet]
-        public ViewResult Get()
-        {
-            var model = new IncidentViewModel
+            public ViewResult Get()
             {
             var technicians = context.Technicians.ToList();
             return View(technicians);

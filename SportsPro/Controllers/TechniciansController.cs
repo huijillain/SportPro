@@ -1,12 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Linq;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SportsPro.Models;
 
 namespace SportsPro.Controllers
 {
+    [Authorize(Roles = "Admin")]
     public class TechniciansController : Controller
     {
         private SportsProContext context { get; set; }
@@ -15,6 +14,9 @@ namespace SportsPro.Controllers
         {
             this.context = context;
         }
+
+        [TempData]
+        public string Message { get; set; }
 
         [Route("Technicians")] //Add Route
         public IActionResult Index()
@@ -27,7 +29,6 @@ namespace SportsPro.Controllers
         public IActionResult Add()
         {
             ViewBag.Action = "Add";
-            ViewBag.Technicians = context.Technicians.ToList();
             return View("Edit", new Technician());
         }
 
@@ -35,41 +36,39 @@ namespace SportsPro.Controllers
         public IActionResult Edit(int id)
         {
             ViewBag.Action = "Edit";
-            ViewBag.Technicians = context.Technicians.ToList();
-            var technician = context.Technicians.Find(id);
-            return View(technician);
+            var t = context.Technicians.Find(id);
+            return View(t);
         }
 
         [HttpPost]
-        public IActionResult Edit(Technician technician)
+        public RedirectToActionResult Edit(Technician technician)
         {
-            if (ModelState.IsValid)
+            if (technician.TechnicianID == 0)
             {
-                if (technician.TechnicianID == 0)
-                    context.Technicians.Add(technician);
-                else
-                    context.Technicians.Update(technician);
-                context.SaveChanges();
-                return RedirectToAction("Index", "Home");
-            }
+                Message = $"Added Technician {technician.Name}";
+                context.Technicians.Add(technician);
+            }            
             else
             {
-                ViewBag.Action = (technician.TechnicianID == 0) ? "Add" : "Edit";
-                ViewBag.Technicians = context.Technicians.ToList();
-                return View(technician);
+                Message = $"Edited Technician {technician.Name}";
+                context.Technicians.Update(technician);
             }
+            context.SaveChanges();
+            return RedirectToAction("Index", "Technicians");
         }
 
         [HttpGet]
         public IActionResult Delete(int id)
         {
-            var technician = context.Technicians.Find(id);
-            return View(technician);
+            ViewBag.Action = "Delete";
+            var t = context.Technicians.Find(id);
+            return View(t);
         }
 
         [HttpPost]
         public IActionResult Delete(Technician technician)
         {
+            Message = $"Deleted Technician {technician.Name}";
             context.Technicians.Remove(technician);
             context.SaveChanges();
             return RedirectToAction("Index", "Technicians");
