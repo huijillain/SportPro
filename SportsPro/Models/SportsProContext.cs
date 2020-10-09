@@ -14,6 +14,7 @@ namespace SportsPro.Models
         public DbSet<Country> Countries { get; set; }
         public DbSet<Customer> Customers { get; set; }
         public DbSet<Incident> Incidents { get; set; }
+        public DbSet<Registration> Registrations { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -298,6 +299,19 @@ namespace SportsPro.Models
                     DateClosed = null
                 }
             );
+            modelBuilder.Entity<Registration>()
+  .HasKey(cp => new { cp.CustomerID, cp.ProductID });
+
+
+            modelBuilder.Entity<Registration>()
+                .HasOne(cp => cp.Product)
+                .WithMany(p => p.Registrations)
+                .HasForeignKey(cp => cp.ProductID);
+
+            modelBuilder.Entity<Registration>()
+                .HasOne(cp => cp.Customer)
+                .WithMany(c => c.Registrations)
+                .HasForeignKey(cp => cp.CustomerID);
         }
     }
 }

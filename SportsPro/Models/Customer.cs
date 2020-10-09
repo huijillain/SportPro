@@ -1,13 +1,15 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc;
-using System.Threading.Tasks;
-using System;
 
 namespace SportsPro.Models
 {
     public class Customer
     {
+		public Customer()
+        {
+			Registrations = new List<Registration>();
+		}
 		public int CustomerID { get; set; }
 
 		[Required(ErrorMessage = "First Name must be between 1 and 51 characters.")]
@@ -37,12 +39,10 @@ namespace SportsPro.Models
         public string Phone { get; set; }
 
         [Required(ErrorMessage = "Please enter a valid email address.")]
-        [Remote("IsEmailAvailable", "Customers")]
+        [Remote("CheckEmail", "Validation")]
         [DataType(DataType.EmailAddress)]
 		public string Email { get; set; }
-
-        //public ICollection<Registeration> Index { get; set; }
-
         public string FullName => FirstName + " " + LastName;   // read-only property
+		public virtual IList<Registration> Registrations { get; set; }
 	}
 }

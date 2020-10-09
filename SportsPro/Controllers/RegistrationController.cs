@@ -1,14 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
+﻿using System.Linq;
 using SportsPro.Models;
-
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
+using System.Collections.Generic;
 
 namespace SportsPro.Controllers
 {
+    [Authorize(Roles = "Admin")]
     public class RegistrationController : Controller
     {
         private SportsProContext context { get; set; }
@@ -19,7 +18,7 @@ namespace SportsPro.Controllers
         }
 
         [HttpGet]
-        public ViewResult GetCustomer()
+        public ViewResult GetCustomer(string error = null)
         {
             var model = new RegisterViewModel
             {
@@ -29,9 +28,13 @@ namespace SportsPro.Controllers
                 //Technicians = context.Technicians.OrderBy(c => c.Name).ToList(),
                 Customers = context.Customers.OrderBy(c => c.FirstName).ToList(),
                 // Products = context.Products.OrderBy(p => p.Name).ToList(),
-
             };
             IQueryable<Customer> query = context.Customers;
+            if (error == "not_select")
+            {
+                model.WarningText = "Please select a customer!";
+            }
+
             model.Customers = query.ToList();
             return View(model);
         }
@@ -45,15 +48,25 @@ namespace SportsPro.Controllers
         //}
 
         [HttpGet]
-        public ViewResult Index(string activeIncident = "All", string activeTechnician = "All")
+        public ViewResult Registrations(string activeIncident = "All", string activeTechnician = "All")
         {
+            var custId = HttpContext.Session.GetInt32("customerId");
+            var customerProducts = new List<Product>();
+
+            if (custId.HasValue && custId > 0)
+            {
+                customerProducts = (from r in context.Registrations
+                                    join p in context.Products on r.ProductID equals p.ProductID
+                                    where r.CustomerID == custId
+                                    select p).OrderBy(p => p.Name).ToList();
+            }
 
             var model = new RegisterViewModel
             {
-
                 Customers = context.Customers.OrderBy(c => c.FirstName).ToList(),
                 Products = context.Products.OrderBy(p => p.Name).ToList(),
-
+                CustomerProducts = customerProducts,
+                WarningText = TempData["message"].ToString()
             };
             //IQueryable<Incident> query = context.Incidents;
             //if (activeIncident != "All")
@@ -65,20 +78,50 @@ namespace SportsPro.Controllers
         }
 
         [HttpPost]
-        public ViewResult Index(RegisterViewModel inc)
-
+        public ActionResult Registrations(RegisterViewModel inc)
         {
             var custId = inc.CurrentCustomer.CustomerID;
+            if (custId == 0)
+            {
+                return RedirectToAction("GetCustomer", new { @error = "not_select" });
+            }
+            HttpContext.Session.SetInt32("customerId", custId);
+
             var customer = context.Customers.Single(c => c.CustomerID == custId);
             var model = new RegisterViewModel
             {
                 //Products = context.Products.Where(g => g.ProductID == custId).OrderBy(a => a.Registrations).ToList(),
                 Customers = context.Customers.OrderBy(c => c.FirstName).ToList(),
                 Products = context.Products.OrderBy(p => p.Name).ToList(),
+                CustomerProducts = (from r in context.Registrations
+                                    join p in context.Products on r.ProductID equals p.ProductID
+                                    where r.CustomerID == custId
+                                    select p).OrderBy(p => p.Name).ToList(),
                 ActiveCustomer = customer.FullName
-
             };
             return View(model);
+        }
+
+        [HttpPost]
+        public ActionResult RegisterProduct(RegisterViewModel inc)
+        {
+            var custId = HttpContext.Session.GetInt32("customerId");
+
+            if (!custId.HasValue || custId == 0)
+            {
+                return RedirectToAction("GetCustomer", new { @error = "not_select" });
+            }
+            var customer = context.Customers.Single(c => c.CustomerID == custId);
+
+            context.Registrations.Add(new Registration
+            {
+                CustomerID = custId.Value,
+                ProductID = inc.CurrentProduct.ProductID
+            });
+
+            context.SaveChanges();
+
+            return RedirectToAction("Registrations");
         }
 
         [HttpGet]
@@ -89,8 +132,9 @@ namespace SportsPro.Controllers
         }
 
         [HttpPost]
-        public RedirectToActionResult Delete(Product product)
+        public ActionResult DeleteProduct(int productId)
         {
+            var product = context.Products.Find(productId);
             context.Products.Remove(product);
             context.SaveChanges();
             TempData["message"] = $"{product.Name} deleted from database";

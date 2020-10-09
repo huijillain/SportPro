@@ -31,7 +31,7 @@ namespace SportsPro.Models
         public Product CurrentProduct { get; set; }
 
         public int? CustomerID { get; set; }
-
+        public string WarningText { get; set; }
         public string CustomerEmail { get; set; }
 
         private List<Product> products;
@@ -45,6 +45,16 @@ namespace SportsPro.Models
             }
         }
 
+        private List<Product> customerProducts;
+
+        public List<Product> CustomerProducts
+        {
+            get => customerProducts;
+            set
+            {
+                customerProducts = value;
+            }
+        }
         private List<Incident> incidents;
 
         public List<Incident> Incidents
