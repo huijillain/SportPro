@@ -4,6 +4,8 @@
 @{
     ViewBag.Title = "Incident Manager";
     var msg = TempData["Message"]?.ToString();
+    string FilterString = Context.Session.GetString("FilterString");
+
     var needsToShow = msg == null || msg == "" ? false : true;
     bool deleted = false;
     if (needsToShow)
@@ -24,13 +26,16 @@
 <div class="container">
     <ul class="nav nav-pills">
         <li class="nav-item">
-            <a class="nav-link active" asp-controller="Incidents" asp-action="FilterAll">All Incidents</a>
+            <a class="nav-link @((FilterString == "null" || FilterString == null) ? "active": "")" asp-controller="Incidents" 
+               asp-action="FilterAll" style="background-color: #a696c8;">All Incidents</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link" asp-controller="Incidents" asp-action="FilterUnassigned">Unassigned Incidents</a>
+            <a class="nav-link @(FilterString == "unassigned" ? "active": "")" asp-controller="Incidents" 
+               asp-action="FilterUnassigned" style="background-color: #a696c8;">Unassigned Incidents</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link" asp-controller="Incidents" asp-action="FilterOpen">Open Incidents</a>
+            <a class="nav-link @(FilterString == "open" ? "active": "")" asp-controller="Incidents" 
+               asp-action="FilterOpen">Open Incidents</a>
         </li>
 
     </ul>

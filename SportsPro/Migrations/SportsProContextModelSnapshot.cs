@@ -255,7 +255,6 @@ namespace SportsPro.Migrations
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Email")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("FirstName")
@@ -547,14 +546,14 @@ namespace SportsPro.Migrations
 
             modelBuilder.Entity("SportsPro.Models.Registration", b =>
                 {
-                    b.Property<int>("CustomerID")
+                    b.Property<int?>("CustomerID")
                         .HasColumnType("int");
 
-                    b.Property<int>("ProductID")
+                    b.Property<int?>("ProductID")
                         .HasColumnType("int");
 
-                    b.Property<int>("Id")
-                        .HasColumnType("int");
+                    b.Property<string>("ActiveCustomer")
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("CustomerID", "ProductID");
 

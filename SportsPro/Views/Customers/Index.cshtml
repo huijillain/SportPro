@@ -1,14 +1,14 @@
 ﻿@model List<Customer>
 @{
     ViewBag.Title = " Customer Manager ";
-}
-
-@*<h2>@ViewBag.Title</h2>*@
-@if (TempData.Keys.Contains("message"))
-{
-    <h4 class="bg-info text-center text-white p-2">
-        @TempData["message"]
-    </h4>
+    var msg = TempData["Message"]?.ToString();
+    var needsToShow = msg == null || msg == "" ? false : true;
+    bool deleted = false;
+    if (needsToShow)
+    {
+        deleted = msg.Contains("Delete");
+    }
+    TempData["Message"] = "";
 }
 
 <div class="text-center">

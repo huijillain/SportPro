@@ -18,19 +18,20 @@
                 <td>
                     <a asp-controller="Registration" asp-action="Delete"
                        asp-route-id="@product.ProductID"
-                       class="btn btn-primary">Delete</a>
+                       class="btn" style="background-color: #f67e7d;">Delete</a>
                 </td>
             </tr>
         }
     </tbody>
 </table>
 
-<form asp-action="Index" method="post">
-    <div asp-validation-summary="All" class="text-danger"></div>
+<div class="alert-info">@Model.WarningText</div>
+<form asp-action="RegisterProduct" method="post">
+    @*<div asp-validation-summary="All" class="text-danger"></div>*@
 
     <div class="form-group">
         <h3>Product</h3>
-        <label asp-for="CurrentProduct.ProductID">Technician</label>
+
         <select asp-for="CurrentProduct.ProductID" class="form-control">
             <option value="">Please select one</option>
             @foreach (Product product in Model.Products)

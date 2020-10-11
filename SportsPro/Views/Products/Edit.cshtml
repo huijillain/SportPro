@@ -3,52 +3,53 @@
     string title = ViewBag.Action + " Product";
     ViewBag.Title = title;
     ViewBag.Date = ViewBag.Action == "Add" ? DateTime.Now : Model.ReleaseDate;
-
 }
 
 @*Add Validation to Add Edit Pages*@
 <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
 <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
 
-<h2>@ViewBag.Title</h2>
+<div class="text-center">
+    <h1 style="background-color: #decdc3; font-size: 50px" class="jumbotron"><b>@ViewBag.Action Product</b></h1>
+</div>
 
-<form asp-action="Edit" method="post">
-    @*<div asp-validation-summary="All" class="text-danger"></div>*@
-    @if (ViewBag.Action == "Edit")
-    {
-        <input asp-for="ProductID" type="hidden" value="@Model.ProductID" />
-    }
-    <div class="form-group">
-        <label asp-for="ProductCode">Code</label>
-        <input asp-for="ProductCode" class="form-control" id="code" placeholder="code" value=@Model.ProductCode>
-    </div>
+    <form asp-action="Edit" method="post">
+        @*<div asp-validation-summary="All" class="text-danger"></div>*@
+        @if (ViewBag.Action == "Edit")
+        {
+            <input asp-for="ProductID" type="hidden" value="@Model.ProductID" />
+        }
+        <div class="form-group">
+            <label asp-for="ProductCode">Code</label>
+            <input asp-for="ProductCode" class="form-control" id="code" placeholder="code" value=@Model.ProductCode>
+        </div>
 
-    <div class="form-group">
-        <label asp-for="Name">Name</label>
-        <input asp-for="Name" class="form-control" id="name" placeholder="name" value=@Model.Name>
-    </div>
+        <div class="form-group">
+            <label asp-for="Name">Name</label>
+            <input asp-for="Name" class="form-control" id="name" placeholder="name" value=@Model.Name>
+        </div>
 
-    <div class="form-group">
-        <label asp-for="YearlyPrice">Price</label>
-        <input asp-for="YearlyPrice" class="form-control" id="price" placeholder="Yearly Price" value=@Model.YearlyPrice>
-    </div>
+        <div class="form-group">
+            <label asp-for="YearlyPrice">Price</label>
+            <input asp-for="YearlyPrice" class="form-control" id="price" placeholder="Yearly Price" value=@Model.YearlyPrice>
+        </div>
 
-    <div class="form-group">
-        <label asp-for="ReleaseDate">Release Date</label>
-        <input asp-for="ReleaseDate" class="form-control" id="releaseDate" placeholder="ReleaseDate" value=@Model.ReleaseDate>
-    </div>
+        <div class="form-group">
+            <label asp-for="ReleaseDate">Release Date</label>
+            <input asp-for="ReleaseDate" class="form-control" id="releaseDate" placeholder="ReleaseDate" value=@Model.ReleaseDate>
+        </div>
 
-    <input type="hidden" asp-for="ProductID" />
+        <input type="hidden" asp-for="ProductID" />
 
-    <button type="submit" class="btn btn-primary">Save</button>
-    @if (ViewBag.Action == "Add")
-    {
-        <a asp-controller="Products" asp-action="Index"
-           class="btn btn-primary">Cancel</a>
-    }
-    else
-    {
-        <a asp-action="Edit"
-           class="btn btn-primary">Cancel Edit</a>
-    }
-</form>
+        <button type="submit" class="btn btn-primary">Save</button>
+        @if (ViewBag.Action == "Add")
+        {
+            <a asp-controller="Products" asp-action="Index"
+               class="btn btn-primary">Cancel</a>
+        }
+        else
+        {
+            <a asp-action="Edit"
+               class="btn btn-primary">Cancel Edit</a>
+        }
+    </form>

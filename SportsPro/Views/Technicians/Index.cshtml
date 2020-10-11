@@ -1,5 +1,4 @@
 ﻿@model List<Technician>
-
 @{
     ViewBag.Title = "Technician Manager";
     var msg = TempData["Message"]?.ToString();
@@ -31,19 +30,19 @@
         </tr>
     </thead>
     <tbody>
-        @foreach (var technician in @Model)
+        @foreach (var t in @Model)
         {
             <tr>
-                <td>@technician.Name</td>
-                <td>@technician.Email</td>
-                <td>@technician.Phone</td>
+                <td>@t.Name</td>
+                <td>@t.Email</td>
+                <td>@t.Phone</td>
                 <td>
                     <a asp-controller="Technicians" asp-action="Edit"
-                       asp-route-id="@technician.TechnicianID">Edit</a>
+                       asp-route-id=@t.TechnicianID class="btn" style="background-color: #bae8e8;">Edit</a>
                 </td>
                 <td>
                     <a asp-controller="Technicians" asp-action="Delete"
-                       asp-route-id="@technician.TechnicianID">Delete</a>
+                       asp-route-id=@t.TechnicianID class="btn" style="background-color: #bae8e8;">Delete</a>
                 </td>
             </tr>
         }

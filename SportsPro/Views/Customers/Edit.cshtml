@@ -5,7 +5,7 @@
 }
 
 @*Add Validation only to Add Edit Pages replacing layout section*@
-@section scripts {
+@{
 <script src="~/lib/jquery/dist/jquery.min.js"></script>
 <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
 <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
@@ -50,10 +50,9 @@
         <span asp-validation-for="PostalCode" class="text-danger"></span>
     </div>
     <div class="form-group">
-
         <label asp-for="CountryID">Country</label>
 
-
+        <!--use the asp- items tag helper instead of Select-->
         <select asp-for="CountryID" asp-items="@(new SelectList(ViewBag.Countries, "CountryID", "Name", // use the asp- items tag helper instead of Select
                          Model.CountryID))"
                 class="form-control">

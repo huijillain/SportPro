@@ -111,8 +111,8 @@ namespace SportsPro
             app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseRouting();
-            app.UseAuthorization();
             app.UseAuthentication();
+            app.UseAuthorization();
 
             app.UseSession();  // must be called before UseEndpoints()
             app.UseEndpoints(endpoints =>
