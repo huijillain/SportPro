@@ -1,10 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Linq;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SportsPro.Models;
+using SportsPro.Models.DataLayer;
 
 namespace SportsPro.Controllers
 {
@@ -70,7 +68,7 @@ namespace SportsPro.Controllers
         [HttpGet]
         public IActionResult Delete(int id)
         {
-            var product = ProductRepo.Products.Find(id);
+            var product = ProductRepo.Get(id);
             return View(product);
         }
 
@@ -79,7 +77,7 @@ namespace SportsPro.Controllers
         {
             ProductRepo.Delete(product);
             TempData["message"] = $"Deleted Product {product.Name}.";
-            return RedirectToAction("Index", "Products");              // Redirect
+            return RedirectToAction("List", "Product");              // Redirect
         }
     }
 }

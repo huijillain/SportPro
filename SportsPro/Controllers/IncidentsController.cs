@@ -41,15 +41,17 @@ namespace SportsPro.Controllers
         [HttpGet]
         public ViewResult Add()
         {
+            Incident activeIncident = new Incident();
+            Technician activeTechnician = new Technician();
             var viewModel = new IncidentViewModel
             {
-                Action = "Add",
                 ActiveIncident = activeIncident,
                 ActiveTechnician = activeTechnician,
                 Incidents = context.Incidents.OrderBy(i => i.Title).ToList(),
                 Technicians = context.Technicians.OrderBy(c => c.Name).ToList(),
                 Customers = context.Customers.OrderBy(c => c.FirstName).ToList(),
                 Products = context.Products.OrderBy(p => p.Name).ToList(),
+                Action = "Add"
             };
             return View("Edit", viewModel);
         }

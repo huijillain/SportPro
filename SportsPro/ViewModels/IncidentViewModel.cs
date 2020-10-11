@@ -7,9 +7,11 @@ namespace SportsPro.ViewModels
     {
         public List<Customer> Customers { get; set; }
         public string FilterString { get; set; }
-        public string ActiveIncident { get; set; }
-        public string ActiveTechnician { get; set; }
+
+        public Incident ActiveIncident { get; set; }
+        public Technician ActiveTechnician { get; set; }
         public string Action { get; set; }
+
         public Incident CurrentIncident { get; set; }
 
         public List<Product> Products { get; set; }
@@ -36,9 +38,9 @@ namespace SportsPro.ViewModels
             }
         }
         public string CheckActiveIncident(string i) =>
-            i.ToLower() == ActiveIncident.ToLower() ? "active" : "";
+            i.ToLower() == ActiveIncident.ToString() ? "active" : "";
         public string CheckActiveTechnician(string t) =>
-            t.ToLower() == ActiveTechnician.ToLower() ? "active" : "";
+            t.ToLower() == ActiveTechnician.ToString() ? "active" : "";
 
     }
 }
