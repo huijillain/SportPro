@@ -37,10 +37,10 @@ namespace SportsPro.ViewModels
                 technicians = value;
             }
         }
-        public string CheckActiveIncident(string i) =>
-            i.ToLower() == ActiveIncident.ToString() ? "active" : "";
-        public string CheckActiveTechnician(string t) =>
-            t.ToLower() == ActiveTechnician.ToString() ? "active" : "";
+        public string CheckActiveIncident(int i) =>
+            i.ToString() == ActiveIncident.ToString() ? "active" : "";
+        public string CheckActiveTechnician(int t) =>
+            t.ToString() == ActiveTechnician.ToString() ? "active" : "";
 
     }
 }

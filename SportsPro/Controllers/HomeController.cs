@@ -12,12 +12,12 @@ namespace SportsPro.Controllers
             _logger = logger;
         }
 
-        public IActionResult Index()
+        public ViewResult Index()
         {
             return View();
         }
         [Route("About")] //Add Route, change from /home/about to only /about, page 211
-        public IActionResult About()
+        public ViewResult About()
         {
             return View();
         }
