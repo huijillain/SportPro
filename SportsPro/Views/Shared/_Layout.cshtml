@@ -1,4 +1,12 @@
-﻿<!DOCTYPE html>
+﻿@using Microsoft.AspNetCore.Identity
+@inject SignInManager<IdentityUser> SignInManager
+@inject UserManager<IdentityUser> UserManager
+@{
+    string controllerName = ViewContext.RouteData.Values["controller"].ToString();
+    string action = ViewContext.RouteData.Values["action"].ToString();
+}
+
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -10,54 +18,97 @@
 
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    @*<script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
-    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>*@
-    <script src="~s/site.js" asp-append-version="true"></script>
-    @RenderSection("Scripts", required: false) 
-    <!--only where required section needed in CustomerController, add action-->
 
 </head>
 <body>
     <header>
         <nav class="navbar navbar-expand-md navbar-dark bg-primary">
-            <a class="navbar-brand" href="/">SportsPro</a>
+            <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">SportsPro</a>
             <button class="navbar-toggler" type="button"
                     data-toggle="collapse" data-target="#navbarSupportedContent"
                     aria-controls="navbarSupportedContent" aria-expanded="false"
                     aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
-            <nav class="collapse navbar-collapse" id="navbarSupportedContent">
-                <div class="navbar-nav mr-auto">
-                    <a class="nav-item nav-link active" asp-controller="Home" asp-action="Index">Home</a>
-                    <a class="nav-item nav-link active" asp-controller="Products" asp-action="Index">Products</a>
-                    <a class="nav-item nav-link active" asp-controller="Technicians" asp-action="Index">Technicians</a>
-                    <a class="nav-item nav-link active" asp-controller="Customers" asp-action="Index">Customers</a>
-                    <a class="nav-item nav-link active" asp-controller="Incidents" asp-action="Index">Incidents</a>
-                    <a class="nav-item nav-link active" asp-controller="Registration" asp-action="GetCustomer">Registrations</a>
-                </div>
-                <div class="navbar-nav navbar-right">
-                    <a class="nav-item nav-link active" asp-controller="Home" asp-action="About">About</a>
-                </div>
-            </nav>
+
+            <div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse">
+
+                <ul class="navbar-nav flex-grow-1">
+                    <li class="nav-item">
+                        <a class="nav-link text-white @(controllerName == "Home" ? "active" : "")" asp-controller="Home" asp-action="Index">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-white @(controllerName == "Home" && action == "About"? "active" : "")" asp-controller="Home" asp-action="About">About</a>
+                    </li>
+                    @if (SignInManager.IsSignedIn(User))
+                    {
+                        @if (User.IsInRole("Admin"))
+                        {
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle text-white" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    Manage
+                                </a>
+
+                                <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                                    <a class="dropdown-item text-dark @(controllerName == "Products" ? "active" : "")" asp-controller="Products" asp-action="Index">Products</a>
+                                    <a class="dropdown-item text-dark @(controllerName == "Technicians" ? "active" : "")" asp-controller="Technicians" asp-action="Index">Technicians</a>
+                                    <a class="dropdown-item text-dark @(controllerName == "Customers" ? "active" : "")" asp-controller="Customers" asp-action="Index">Customers</a>
+                                    <a class="dropdown-item text-dark @(controllerName == "Incidents" ? "active" : "")" asp-controller="Incidents" asp-action="Index">Incidents</a>
+                                    <a class="dropdown-item text-dark @(controllerName == "Registrations" ? "active" : "")" asp-controller="Registration" asp-action="GetCustomer">Registrations</a>
+                                </div>
+                            </li>
+                        }
+
+
+                        else if (User.IsInRole("Tech"))
+                        {
+                            <li class="nav-item dropdown">
+
+                                <a class="nav-link dropdown-toggle text-white" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    Manage
+                                </a>
+                                <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+
+                                    <a class="dropdown-item text-dark @(controllerName == "TechIncident" ? "active" : "")" asp-controller="TechIncident" asp-action="Get">Update Incidents</a>
+                                </div>
+                            </li>
+                        }
+                    }
+
+                </ul>
+            </div>
+
+            <div class="navbar-nav navbar-right">
+                <partial name="_LoginPartial" />
+            </div>
+
         </nav>
+
     </header>
 
-    @if (TempData.Keys.Contains("message"))
-    {
-        <h4 class="bg-info text-center text-white p-2">
-            @TempData["message"]
-        </h4>
-    }
-
     <div class="container">
-        <main role="main" class="pb-5">
+        @if (TempData.ContainsKey("message"))
+        {
+            <main role="main">
+                @RenderBody()
+            </main>
+        }
+        <main role="main">
             @RenderBody()
         </main>
     </div>
+    <br />
+    <br />
+    <br />
+    <footer>
+        <div class="container-fluid text-center">
+            <div class="col-12">
+                <div class="font-weight-bold">
+                    <h5><span class="glyphicon glyphicon-copyright-mark" aria-hidden="true"></span> @DateTime.Now.Year - SportsPro</h5>
+                </div>
+            </div>
 
-    <footer class="border-top footer text-muted">
-        <div class="container">&copy; @DateTime.Now.Year - SportsPro</div>
+        </div>
     </footer>
 </body>
 </html>
