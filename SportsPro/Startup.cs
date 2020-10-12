@@ -122,8 +122,8 @@ namespace SportsPro
                     pattern: "{controller=Home}/{action=Index}/{id?}");
                 endpoints.MapRazorPages();
             });
-            CreateUserRoles(services).Wait();
-            CreateNewRoles(services).Wait();
+            //CreateUserRoles(services).Wait();
+            //CreateNewRoles(services).Wait();
         }
     }
 }
